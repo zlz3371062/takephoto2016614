@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -33,6 +34,11 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        String path = Environment.getExternalStorageDirectory()+ "";
+        Log.e("zlz",path); //      /storage/emulated/0
+
+
         btnxiangji = (Button) findViewById(R.id.btn_xiangji);
         btntuku = (Button) findViewById(R.id.btn_tuku);
         btnxiangji.setOnClickListener(new View.OnClickListener() {
@@ -47,6 +53,9 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent _intent = new Intent(Intent.ACTION_GET_CONTENT);
+
+           Log.e("zlz",Intent.ACTION_GET_CONTENT + "");
+
                 _intent.setType("image/*");
                 startActivityForResult(_intent,2);
 
@@ -82,22 +91,13 @@ public class MainActivity extends Activity {
 
 
            }else  if( requestCode == 2){
+             //  file:///storage/emulated/0/DCIM/Camera/IMG_20160609_133358.jpg
+               String uri = data.getDataString();
+               uri = uri.substring(7);
+               Log.e("zlz",uri);
 
-               Uri uri = data.getData();
                Toast.makeText(this,uri + "",Toast.LENGTH_LONG).show();
-                String _ss = uri.getPath();
-                File _file = new File(_ss);
-//              Intent  _intent = new Intent("com.android.camera.action.CROP");
-//               _intent.setDataAndType(uri,"image/*");
-//               _intent.putExtra("crop","true");
-//               _intent.putExtra("aspectX",1);
-//               _intent.putExtra("aspectY",1);
-//               _intent.putExtra("outputX",150);
-//               _intent.putExtra("outputY",150);
-//               _intent.putExtra("return-data",true);
-//               startActivityForResult(_intent,3);
-               Log.e("zlz",_ss);
-               Bitmap _bitmap = BitmapFactory.decodeFile(_ss);
+               Bitmap _bitmap = BitmapFactory.decodeFile(uri);
                if(_bitmap != null) {
 
                    ImageView img = (ImageView) findViewById(R.id.img_touxiang);
